@@ -1,3 +1,6 @@
+package model;
+
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.classifiers.Classifier;
@@ -6,14 +9,45 @@ import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
+import weka.experiment.InstanceQuery;
 
 
 public class ModelGenerator {
 
-    public Instances loadDataset(String path) {
+    Instances loadDatasetFromFile(String path) {
         Instances dataset = null;
         try {
             dataset = DataSource.read(path);
+            if (dataset.classIndex() == -1) {
+                dataset.setClassIndex(dataset.numAttributes() - 1);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return dataset;
+    }
+
+    public InstanceQuery configDBConnection(String DatabaseUtilsFile, String user, String password, String databaseUrl) throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(DatabaseUtilsFile).toURI());
+
+        InstanceQuery instanceQuery = new InstanceQuery();
+
+        instanceQuery.setCustomPropsFile(file);
+        instanceQuery.setDatabaseURL(databaseUrl);
+        instanceQuery.setUsername(user);
+        instanceQuery.setPassword(password);
+
+        return instanceQuery;
+    }
+
+
+    public Instances loadDatasetFromDB(InstanceQuery instanceQuery, String query) {
+        Instances dataset = null;
+        try {
+            instanceQuery.setQuery(query);
+            dataset = instanceQuery.retrieveInstances();
             if (dataset.classIndex() == -1) {
                 dataset.setClassIndex(dataset.numAttributes() - 1);
             }
@@ -70,11 +104,11 @@ public class ModelGenerator {
         return m;
     }
 
-    public String evaluateModel(Classifier model, Instances traindataset, Instances testdataset) {
+    public String evaluateModel(Classifier model, Instances trainDataSet, Instances testdataset) {
         Evaluation eval = null;
         try {
             // Evaluate classifier with test dataset
-            eval = new Evaluation(traindataset);
+            eval = new Evaluation(trainDataSet);
             eval.evaluateModel(model, testdataset);
         } catch (Exception ex) {
             Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,10 +116,10 @@ public class ModelGenerator {
         return eval.toSummaryString("", true);
     }
 
-    public void saveModel(Classifier model, String modelpath) {
+    public void saveModel(Classifier model, String modelPath) {
 
         try {
-            SerializationHelper.write(modelpath, model);
+            SerializationHelper.write(modelPath, model);
         } catch (Exception ex) {
             Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
