@@ -12,6 +12,9 @@ import weka.experiment.InstanceQuery;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/eeg") // This means URL's start with /demo (after api.Application path)
@@ -49,7 +52,7 @@ public class EEGController {
 
     @PostMapping("/updateModel")
     public @ResponseBody
-    Boolean updateModel() throws Exception {
+    Map<String, String> updateModel() throws Exception {
 
         Dotenv dotenv = Dotenv.load();
 
@@ -78,19 +81,22 @@ public class EEGController {
         Instances dataSetNor = Filter.useFilter(dataSet, filter);
 
         Instances trainDataSet = new Instances(dataSetNor, 0, trainSize);
-        Instances testDataset = new Instances(dataSetNor, trainSize, testSize);
+        Instances testDataSet = new Instances(dataSetNor, trainSize, testSize);
 
         // Build classifier with train DataSet
         MultilayerPerceptron ann = (MultilayerPerceptron) mg.buildClassifier(trainDataSet);
 
         // Evaluate classifier with test DataSet
-        String evalSummary = mg.evaluateModel(ann, trainDataSet, testDataset);
+        String evalSummary = mg.evaluateModel(ann, trainDataSet, testDataSet);
         System.out.println("Evaluation: " + evalSummary);
 
         // Save model
         String modelPath = ModelGenerator.class.getClassLoader().getResource("model.bin").getPath();
         mg.saveModel(ann, modelPath);
 
-        return true;
+        Map<String, String> ret = new HashMap<>();
+        ret.put("Status", "DONE");
+
+        return ret;
     }
 }

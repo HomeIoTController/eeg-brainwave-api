@@ -76,6 +76,7 @@ public class ModelClassifier {
         Classifier cls;
         try {
             cls = (MultilayerPerceptron) SerializationHelper.read(path);
+            System.out.println(cls.classifyInstance(insts.firstInstance()));
             result = classVal.get((int) cls.classifyInstance(insts.firstInstance()));
         } catch (Exception ex) {
             Logger.getLogger(ModelClassifier.class.getName()).log(Level.SEVERE, null, ex);
