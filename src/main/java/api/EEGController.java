@@ -1,8 +1,17 @@
 package api;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import model.ModelClassifier;
+import model.ModelGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import weka.classifiers.functions.MultilayerPerceptron;
+import weka.core.*;
+import weka.experiment.InstanceQuery;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Normalize;
+
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/eeg") // This means URL's start with /demo (after api.Application path)
@@ -21,5 +30,67 @@ public class EEGController {
     public @ResponseBody
     Iterable<EEGData> get() {
         return eegDataRepository.findAll();
+    }
+
+    @PostMapping("/classify")
+    public @ResponseBody
+    String classify(@RequestBody EEGData eegData) throws Exception {
+
+        ModelClassifier cls = new ModelClassifier();
+
+        Instances clsInstances = cls.createInstance(eegData.getTheta(), eegData.getLowAlpha(), eegData.getHighAlpha(), eegData.getLowBeta(), eegData.getHighBeta(), eegData.getLowGamma(), eegData.getMidGamma(), eegData.getAttention(), eegData.getMeditation(), eegData.getBlink());
+        String modelPath = ModelGenerator.class.getClassLoader().getResource("model.bin").getPath();
+        String classname = cls.classify(clsInstances, modelPath);
+
+        System.out.println("The class name for the instance with: \n" + clsInstances + " is " + classname);
+
+        return classname;
+    }
+
+    @PostMapping("/updateModel")
+    public @ResponseBody
+    Boolean updateModel() throws Exception {
+
+        Dotenv dotenv = Dotenv.load();
+
+        ModelGenerator mg = new ModelGenerator();
+
+        String mysqlUser = dotenv.get("DB_USERNAME");
+        String mysqlPassword = dotenv.get("DB_PASSWORD");
+        String databaseUrl = "jdbc:mysql://" + dotenv.get("DB_HOST") + ":3306/" + dotenv.get("DB_NAME");
+
+        InstanceQuery instanceQuery = mg.configDBConnection("DatabaseUtils.props", mysqlUser, mysqlPassword, databaseUrl);
+
+        String query = "SELECT theta, lowAlpha, highAlpha, lowBeta, highBeta, lowGamma, midGamma, attention, meditation, blink, feelingLabel FROM EEGData";
+        Instances dataSet = mg.loadDatasetFromDB(instanceQuery, query);
+
+        Filter filter = new Normalize();
+
+        // Divide dataSet to train dataSet 80% and test dataSet 20%
+        int trainSize = (int) Math.round(dataSet.numInstances() * 0.8);
+        int testSize = dataSet.numInstances() - trainSize;
+
+        dataSet.randomize(new Debug.Random(1));// if you comment this line the accuracy of the model will be dropped from 96.6% to 80%
+
+        // Normalize dataSet
+        filter.setInputFormat(dataSet);
+
+        Instances dataSetNor = Filter.useFilter(dataSet, filter);
+
+        Instances trainDataSet = new Instances(dataSetNor, 0, trainSize);
+        Instances testDataset = new Instances(dataSetNor, trainSize, testSize);
+
+        // Build classifier with train DataSet
+        MultilayerPerceptron ann = (MultilayerPerceptron) mg.buildClassifier(trainDataSet);
+
+        // Evaluate classifier with test DataSet
+        String evalSummary = mg.evaluateModel(ann, trainDataSet, testDataset);
+        System.out.println("Evaluation: " + evalSummary);
+
+        // Save model
+        String modelPath = ModelGenerator.class.getClassLoader().getResource("model.bin").getPath();
+        mg.saveModel(ann, modelPath);
+
+        return true;
     }
 }

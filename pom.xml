@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>eeg-brainwave-classifier</groupId>
-    <artifactId>eeg-brainwave-classifier</artifactId>
+    <groupId>eeg-brainwave-api</groupId>
+    <artifactId>eeg-brainwave-api</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <parent>
@@ -15,6 +15,7 @@
     </parent>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -70,6 +71,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
         </plugins>
+
     </build>
 </project>
