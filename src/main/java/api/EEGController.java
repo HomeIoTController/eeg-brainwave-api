@@ -60,7 +60,6 @@ public class EEGController {
     @PostMapping("/updateModel")
     public @ResponseBody
     Map<String, String> updateModel() throws Exception {
-
         ModelGenerator mg = new ModelGenerator();
 
         String mysqlUser = System.getenv("DB_USERNAME");
