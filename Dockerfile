@@ -1,4 +1,4 @@
-FROM sgrio/java-oracle
+FROM sgrio/java-oracle:jdk_10
 MAINTAINER Daniel Marchena (danielmapar@gmail.com)
 RUN apt-get update
 RUN apt-get install -y maven
