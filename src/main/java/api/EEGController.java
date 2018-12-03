@@ -1,6 +1,5 @@
 package api;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import model.ModelClassifier;
 import model.ModelGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import weka.experiment.InstanceQuery;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,8 +41,15 @@ public class EEGController {
 
         ModelClassifier cls = new ModelClassifier();
 
+        String modelPath ;
+        if (System.getenv("ENV").equals("docker")) {
+            modelPath = System.getenv("MODEL_PATH");
+        } else {
+            modelPath = ModelGenerator.class.getClassLoader().getResource("model.bin").getPath();
+        }
+
         Instances clsInstances = cls.createInstance(eegData.getTheta(), eegData.getLowAlpha(), eegData.getHighAlpha(), eegData.getLowBeta(), eegData.getHighBeta(), eegData.getLowGamma(), eegData.getMidGamma(), eegData.getAttention(), eegData.getMeditation(), eegData.getBlink());
-        String modelPath = ModelGenerator.class.getClassLoader().getResource("model.bin").getPath();
+
         String classname = cls.classify(clsInstances, modelPath);
 
         System.out.println("The class name for the instance with: \n" + clsInstances + " is " + classname);
@@ -54,15 +61,21 @@ public class EEGController {
     public @ResponseBody
     Map<String, String> updateModel() throws Exception {
 
-        Dotenv dotenv = Dotenv.load();
-
         ModelGenerator mg = new ModelGenerator();
 
-        String mysqlUser = dotenv.get("DB_USERNAME");
-        String mysqlPassword = dotenv.get("DB_PASSWORD");
-        String databaseUrl = "jdbc:mysql://" + dotenv.get("DB_HOST") + ":3306/" + dotenv.get("DB_NAME");
+        String mysqlUser = System.getenv("DB_USERNAME");
+        String mysqlPassword = System.getenv("DB_PASSWORD");
+        String databaseUrl = "jdbc:mysql://" + System.getenv("DB_HOST") + ":" + System.getenv("DB_PORT") + "/" + System.getenv("DB_NAME");
 
-        InstanceQuery instanceQuery = mg.configDBConnection("DatabaseUtils.props", mysqlUser, mysqlPassword, databaseUrl);
+        File databaseUtilsFile;
+        if (System.getenv("ENV").equals("docker")) {
+            databaseUtilsFile = new File(System.getenv("DATABASE_UTILS_PATH"));
+        } else {
+            ClassLoader classLoader = getClass().getClassLoader();
+            databaseUtilsFile = new File(classLoader.getResource("DatabaseUtils.props").toURI());
+        }
+
+        InstanceQuery instanceQuery = mg.configDBConnection(databaseUtilsFile, mysqlUser, mysqlPassword, databaseUrl);
 
         String query = "SELECT theta, lowAlpha, highAlpha, lowBeta, highBeta, lowGamma, midGamma, attention, meditation, blink, feelingLabel FROM EEGData";
         Instances dataSet = mg.loadDatasetFromDB(instanceQuery, query);
@@ -91,7 +104,12 @@ public class EEGController {
         System.out.println("Evaluation: " + evalSummary);
 
         // Save model
-        String modelPath = ModelGenerator.class.getClassLoader().getResource("model.bin").getPath();
+        String modelPath ;
+        if (System.getenv("ENV").equals("docker")) {
+            modelPath = System.getenv("MODEL_PATH");
+        } else {
+            modelPath = ModelGenerator.class.getClassLoader().getResource("model.bin").getPath();
+        }
         mg.saveModel(ann, modelPath);
 
         Map<String, String> ret = new HashMap<>();

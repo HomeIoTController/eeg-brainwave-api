@@ -28,13 +28,11 @@ public class ModelGenerator {
         return dataset;
     }
 
-    public InstanceQuery configDBConnection(String DatabaseUtilsFile, String user, String password, String databaseUrl) throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(DatabaseUtilsFile).toURI());
+    public InstanceQuery configDBConnection(File databaseUtilsFile, String user, String password, String databaseUrl) throws Exception {
 
         InstanceQuery instanceQuery = new InstanceQuery();
 
-        instanceQuery.setCustomPropsFile(file);
+        instanceQuery.setCustomPropsFile(databaseUtilsFile);
         instanceQuery.setDatabaseURL(databaseUrl);
         instanceQuery.setUsername(user);
         instanceQuery.setPassword(password);

@@ -15,7 +15,7 @@ public class ModelClassifier {
 
 
     public ModelClassifier() {
-        attributes = new ArrayList<Attribute>();
+        attributes = new ArrayList<>();
         attributes.add(new Attribute("theta"));
         attributes.add(new Attribute("lowAlpha"));
         attributes.add(new Attribute("highAlpha"));
@@ -28,7 +28,7 @@ public class ModelClassifier {
         attributes.add(new Attribute("blink"));
 
 
-        classVal = new ArrayList<String>();
+        classVal = new ArrayList<>();
         classVal.add("OPEN");
         classVal.add("HAPPY");
         classVal.add("ALIVE");
@@ -76,7 +76,6 @@ public class ModelClassifier {
         Classifier cls;
         try {
             cls = (MultilayerPerceptron) SerializationHelper.read(path);
-            System.out.println(cls.classifyInstance(insts.firstInstance()));
             result = classVal.get((int) cls.classifyInstance(insts.firstInstance()));
         } catch (Exception ex) {
             Logger.getLogger(ModelClassifier.class.getName()).log(Level.SEVERE, null, ex);

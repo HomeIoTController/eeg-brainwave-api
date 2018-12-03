@@ -25,7 +25,7 @@ public class EEGData {
     private Integer blink;
     private String feelingLabel;
 
-    /*public EEGData(){}
+    public EEGData(){}
 
     public EEGData(Integer id, Integer userId, Date time, Integer theta, Integer lowAlpha, Integer highAlpha, Integer lowBeta, Integer highBeta, Integer lowGamma, Integer midGamma, Integer attention, Integer meditation, Integer blink, String feelingLabel) {
         this.id = id;
@@ -42,7 +42,7 @@ public class EEGData {
         this.meditation = meditation;
         this.blink = blink;
         this.feelingLabel = feelingLabel;
-    }*/
+    }
 
     public Integer getId() {
         return id;

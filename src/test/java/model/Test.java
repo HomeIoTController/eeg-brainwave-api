@@ -10,6 +10,7 @@ import weka.filters.unsupervised.attribute.Normalize;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class Test {
@@ -22,9 +23,12 @@ public class Test {
 
         String mysqlUser = dotenv.get("DB_USERNAME");
         String mysqlPassword = dotenv.get("DB_PASSWORD");
-        String databaseUrl = "jdbc:mysql://" + dotenv.get("DB_HOST") + ":3306/" + dotenv.get("DB_NAME");
+        String databaseUrl = "jdbc:mysql://" + dotenv.get("DB_HOST") + ":" + dotenv.get("DB_PORT") +"/" + dotenv.get("DB_NAME");
 
-        InstanceQuery instanceQuery = mg.configDBConnection("DatabaseUtils.props", mysqlUser, mysqlPassword, databaseUrl);
+        ClassLoader classLoader = ModelGenerator.class.getClassLoader();
+        File databaseUtilsFile = new File(classLoader.getResource("DatabaseUtils.props").toURI());
+
+        InstanceQuery instanceQuery = mg.configDBConnection(databaseUtilsFile, mysqlUser, mysqlPassword, databaseUrl);
 
         String query = "SELECT theta, lowAlpha, highAlpha, lowBeta, highBeta, lowGamma, midGamma, attention, meditation, blink, feelingLabel FROM EEGData";
         Instances dataSet = mg.loadDatasetFromDB(instanceQuery, query);
@@ -44,6 +48,7 @@ public class Test {
         HashMap<String, Integer> classAttrVals = new HashMap<String, Integer>();
         Attribute classAttr = filter.getOutputFormat().classAttribute();
         for (int i = 0; i < classAttr.numValues(); i++) {
+            System.out.println(classAttr.value(i));
             classAttrVals.put(classAttr.value(i), i);
         }
 
@@ -51,6 +56,8 @@ public class Test {
 
         Instances trainDataset = new Instances(datasetNor, 0, trainSize);
         Instances testDataset = new Instances(datasetNor, trainSize, testSize);
+
+        System.out.println(trainDataset);
 
         // Build classifier with train dataset
         MultilayerPerceptron ann = (MultilayerPerceptron) mg.buildClassifier(trainDataset);
