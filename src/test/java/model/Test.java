@@ -54,16 +54,16 @@ public class Test {
 
         Instances datasetNor = Filter.useFilter(dataSet, filter);
 
-        Instances trainDataset = new Instances(datasetNor, 0, trainSize);
+        Instances trainDataSet = new Instances(datasetNor, 0, trainSize);
         Instances testDataset = new Instances(datasetNor, trainSize, testSize);
 
-        System.out.println(trainDataset);
+        System.out.println(trainDataSet);
 
         // Build classifier with train dataset
-        MultilayerPerceptron ann = (MultilayerPerceptron) mg.buildClassifier(trainDataset);
+        MultilayerPerceptron ann = (MultilayerPerceptron) mg.buildClassifier(trainDataSet, ModelGenerator.METHODS.MULTILAYER_PERCEPTRON);
 
         // Evaluate classifier with test dataset
-        String evalSummary = mg.evaluateModel(ann, trainDataset, testDataset);
+        String evalSummary = mg.evaluateModel(ann, trainDataSet, testDataset);
         System.out.println("Evaluation: " + evalSummary);
 
         // Save model

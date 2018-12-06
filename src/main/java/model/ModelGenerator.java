@@ -6,13 +6,22 @@ import java.util.logging.Logger;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.functions.SMO;
+import weka.classifiers.trees.J48;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.experiment.InstanceQuery;
 
-
 public class ModelGenerator {
+
+    public enum METHODS {
+        MULTILAYER_PERCEPTRON,
+        J48,
+        RANDOM_FOREST,
+        SMO
+    }
 
     Instances loadDatasetFromFile(String path) {
         Instances dataset = null;
@@ -56,58 +65,39 @@ public class ModelGenerator {
         return dataset;
     }
 
-    public Classifier buildClassifier(Instances traindataset) {
-        MultilayerPerceptron m = new MultilayerPerceptron();
+    public Classifier buildClassifier(Instances trainDataSet, METHODS method) {
+        Classifier classifier;
+        switch (method) {
+            case MULTILAYER_PERCEPTRON:
+                classifier = new MultilayerPerceptron();
+                break;
+            case J48:
+                classifier = new J48();
+                break;
+            case SMO:
+                classifier = new SMO();
+                break;
+            case RANDOM_FOREST:
+                classifier = new RandomForest();
+                break;
+            default:
+                classifier = new J48();
+        }
 
-        //m.setGUI(true);
-        //m.setValidationSetSize(0);
-        //m.setBatchSize("100");
-        //m.setLearningRate(0.3);
-        //m.setSeed(0);
-        //m.setMomentum(0.2);
-        //m.setTrainingTime(500);//epochs
-        //m.setNormalizeAttributes(true);
-
-        /*Multipreceptron parameters and its default values
-        *Learning Rate for the backpropagation algorithm (Value should be between 0 - 1, Default = 0.3).
-        *m.setLearningRate(0);
-
-	*Momentum Rate for the backpropagation algorithm (Value should be between 0 - 1, Default = 0.2).
-	*m.setMomentum(0);
-
-        *Number of epochs to train through (Default = 500).
-        *m.setTrainingTime(0)
-
-	*Percentage size of validation set to use to terminate training (if this is non zero it can pre-empt num of epochs.
-	 (Value should be between 0 - 100, Default = 0).
-        *m.setValidationSetSize(0);
-
-	*The value used to seed the random number generator (Value should be >= 0 and and a long, Default = 0).
-        *m.setSeed(0);
-
-        *The hidden layers to be created for the network(Value should be a list of comma separated Natural
-	numbers or the letters 'a' = (attribs + classes) / 2,
-	'i' = attribs, 'o' = classes, 't' = attribs .+ classes) for wildcard values, Default = a).
-         *m.setHiddenLayers("2,3,3"); three hidden layer with 2 nodes in first layer and 3 nodends in second and 3 nodes in the third.
-
-        *The desired batch size for batch prediction  (default 100).
-        *m.setBatchSize("1");
-         */
         try {
-            m.buildClassifier(traindataset);
-
+            classifier.buildClassifier(trainDataSet);
         } catch (Exception ex) {
             Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return m;
+        return classifier;
     }
 
-    public String evaluateModel(Classifier model, Instances trainDataSet, Instances testdataset) {
+    public String evaluateModel(Classifier model, Instances trainDataSet, Instances testDataSet) {
         Evaluation eval = null;
         try {
             // Evaluate classifier with test dataset
             eval = new Evaluation(trainDataSet);
-            eval.evaluateModel(model, testdataset);
+            eval.evaluateModel(model, testDataSet);
         } catch (Exception ex) {
             Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }

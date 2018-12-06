@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.classifiers.Classifier;
-import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.*;
 
 public class ModelClassifier {
 
-    private ArrayList<Attribute> attributes;
     private ArrayList<String> classVal;
     private Instances dataRaw;
 
-
     public ModelClassifier() {
-        attributes = new ArrayList<>();
+        ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("theta"));
         attributes.add(new Attribute("lowAlpha"));
         attributes.add(new Attribute("highAlpha"));
@@ -26,7 +23,6 @@ public class ModelClassifier {
         attributes.add(new Attribute("attention"));
         attributes.add(new Attribute("meditation"));
         attributes.add(new Attribute("blink"));
-
 
         classVal = new ArrayList<>();
         classVal.add("OPEN");
@@ -54,7 +50,7 @@ public class ModelClassifier {
 
     public Instances createInstance(int theta, int lowAlpha, int highAlpha, int lowBeta, int highBeta, int lowGamma, int midGamma, int attention, int meditation, int blink) {
         dataRaw.clear();
-        Instance newInstance = new DenseInstance(11);
+        Instance newInstance = new DenseInstance(10);
         newInstance.setValue(0, theta);
         newInstance.setValue(1, lowAlpha);
         newInstance.setValue(2, highAlpha);
@@ -71,15 +67,21 @@ public class ModelClassifier {
     }
 
 
-    public String classify(Instances insts, String path) {
+    public String classify(Instances instances, String path) {
         String result = "Not classified!";
-        Classifier cls;
+
         try {
-            cls = (MultilayerPerceptron) SerializationHelper.read(path);
-            result = classVal.get((int) cls.classifyInstance(insts.firstInstance()));
+            System.out.println("path " + path);
+            Classifier classifier = (Classifier) SerializationHelper.read(path);
+            System.out.println("TESTE 2 ");
+            System.out.println(instances.firstInstance());
+            System.out.println(classifier.classifyInstance(instances.firstInstance()));
+            result = classVal.get((int) classifier.classifyInstance(instances.firstInstance()));
         } catch (Exception ex) {
-            Logger.getLogger(ModelClassifier.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ModelClassifier.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
+
         return result;
     }
 
