@@ -1,13 +1,13 @@
 package model;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.SMO;
-import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
@@ -18,12 +18,13 @@ public class ModelGenerator {
 
     public enum METHODS {
         MULTILAYER_PERCEPTRON,
-        J48,
         RANDOM_FOREST,
         SMO
     }
 
-    Instances loadDatasetFromFile(String path) {
+    private static final Logger log = LoggerFactory.getLogger(ModelGenerator.class);
+
+    Instances loadDataSetFromFile(String path) {
         Instances dataset = null;
         try {
             dataset = DataSource.read(path);
@@ -31,7 +32,7 @@ public class ModelGenerator {
                 dataset.setClassIndex(dataset.numAttributes() - 1);
             }
         } catch (Exception ex) {
-            Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            log.info("Error while loading data set!");
         }
 
         return dataset;
@@ -50,7 +51,7 @@ public class ModelGenerator {
     }
 
 
-    public Instances loadDatasetFromDB(InstanceQuery instanceQuery, String query) {
+    public Instances loadDataSetFromDB(InstanceQuery instanceQuery, String query) {
         Instances dataset = null;
         try {
             instanceQuery.setQuery(query);
@@ -59,7 +60,7 @@ public class ModelGenerator {
                 dataset.setClassIndex(dataset.numAttributes() - 1);
             }
         } catch (Exception ex) {
-            Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            log.info("Error while loading data set!");
         }
 
         return dataset;
@@ -71,9 +72,6 @@ public class ModelGenerator {
             case MULTILAYER_PERCEPTRON:
                 classifier = new MultilayerPerceptron();
                 break;
-            case J48:
-                classifier = new J48();
-                break;
             case SMO:
                 classifier = new SMO();
                 break;
@@ -81,15 +79,16 @@ public class ModelGenerator {
                 classifier = new RandomForest();
                 break;
             default:
-                classifier = new J48();
+                classifier = new MultilayerPerceptron();
         }
 
         try {
             classifier.buildClassifier(trainDataSet);
+            return classifier;
         } catch (Exception ex) {
-            Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            log.info("Error while creating classifier {}!", method.name());
         }
-        return classifier;
+        return null;
     }
 
     public String evaluateModel(Classifier model, Instances trainDataSet, Instances testDataSet) {
@@ -99,7 +98,7 @@ public class ModelGenerator {
             eval = new Evaluation(trainDataSet);
             eval.evaluateModel(model, testDataSet);
         } catch (Exception ex) {
-            Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            log.info("Error while evaluating classifier!");
         }
         return eval.toSummaryString("", true);
     }
@@ -109,7 +108,7 @@ public class ModelGenerator {
         try {
             SerializationHelper.write(modelPath, model);
         } catch (Exception ex) {
-            Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            log.info("Failed to save classifier at {}!", modelPath);
         }
     }
 

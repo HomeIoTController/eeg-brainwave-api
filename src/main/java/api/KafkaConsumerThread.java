@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.*;
 
@@ -18,17 +19,22 @@ public class KafkaConsumerThread extends Thread {
     @Autowired
     private EEGDataRepository eegDataRepository;
 
-    private final Logger log = LoggerFactory.getLogger(KafkaConsumerThread.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaConsumerThread.class);
 
     private final String TOPIC = System.getenv("KAFKA_TOPIC");
     private final String BOOTSTRAP_SERVERS = System.getenv("KAFKA_SERVER") + ":" + System.getenv("KAFKA_PORT");
+
+    @PostConstruct
+    public void init() {
+        start();
+    }
 
     private Consumer<Long, String> createConsumer() {
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 BOOTSTRAP_SERVERS);
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
-                "KafkaExampleConsumer");
+                "KafkaConsumer");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 LongDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,

@@ -4,7 +4,9 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
 
 import model.ModelGenerator;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -28,23 +30,33 @@ public class ScheduledTasks {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
-    @Scheduled(cron = "*/60 * * * * *" )
-    public void generateClassifiers() throws Exception {
-        log.info("The time is now {}", dateFormat.format(new Date()));
+    private ModelGenerator mg;
+    private InstanceQuery instanceQuery;
 
+    {
         String mysqlUser = System.getenv("DB_USERNAME");
         String mysqlPassword = System.getenv("DB_PASSWORD");
         String databaseUrl = "jdbc:mysql://" + System.getenv("DB_HOST") + ":" + System.getenv("DB_PORT") + "/" + System.getenv("DB_NAME");
         File databaseUtilsFile = new File(System.getenv("DATABASE_UTILS_PATH"));
 
-        ModelGenerator mg = new ModelGenerator();
-        InstanceQuery instanceQuery = mg.configDBConnection(databaseUtilsFile, mysqlUser, mysqlPassword, databaseUrl);
+        try {
+            mg = new ModelGenerator();
+            instanceQuery = mg.configDBConnection(databaseUtilsFile, mysqlUser, mysqlPassword, databaseUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        ArrayList<Integer> usersIds = eegDataRepository.findDistinctUserIds();
+    @Scheduled(cron = "*/60 * * * * *" )
+    public void generateClassifiers() throws Exception {
+        log.info("The time is now {}", dateFormat.format(new Date()));
 
         Filter filter = new Normalize();
+        ArrayList<Integer> usersIds = eegDataRepository.findDistinctUserIds();
+
+        log.info("Number of users {}", usersIds.size());
 
         // Loading instances for each user
         for (Integer userId: usersIds) {
@@ -55,7 +67,7 @@ public class ScheduledTasks {
             "lowGamma, midGamma, attention, meditation, blink, feelingLabel " +
                     "FROM EEGData WHERE userId = " + userId.toString();
 
-            Instances dataSet = mg.loadDatasetFromDB(instanceQuery, query);
+            Instances dataSet = mg.loadDataSetFromDB(instanceQuery, query);
 
             // Divide dataSet to train dataSet 80% and test dataSet 20%
             int trainSize = (int) Math.round(dataSet.numInstances() * 0.8);
@@ -94,13 +106,12 @@ public class ScheduledTasks {
                     // Save model
                     Path modelPath = Paths.get(modelsDirectoryPath.toString(), method.name() + ".bin");
                     mg.saveModel(classifier, modelPath.toString());
+
                 } catch(Exception e) {
                     log.info("Failed to generate model: {}", method.name());
                     e.printStackTrace();
                 }
             }
         }
-
-
     }
 }

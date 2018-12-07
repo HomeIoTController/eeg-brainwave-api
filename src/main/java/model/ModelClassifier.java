@@ -1,12 +1,15 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import weka.classifiers.Classifier;
 import weka.core.*;
 
 public class ModelClassifier {
+
+    private static final Logger log = LoggerFactory.getLogger(ModelClassifier.class);
 
     private ArrayList<String> classVal;
     private Instances dataRaw;
@@ -41,6 +44,7 @@ public class ModelClassifier {
         classVal.add("AFRAID");
         classVal.add("HURT");
         classVal.add("SAD");
+        classVal.add("?");
         attributes.add(new Attribute("feelingLabel", classVal));
 
         dataRaw = new Instances("TestInstances", attributes, 0);
@@ -50,7 +54,7 @@ public class ModelClassifier {
 
     public Instances createInstance(int theta, int lowAlpha, int highAlpha, int lowBeta, int highBeta, int lowGamma, int midGamma, int attention, int meditation, int blink) {
         dataRaw.clear();
-        Instance newInstance = new DenseInstance(10);
+        Instance newInstance = new DenseInstance(11);
         newInstance.setValue(0, theta);
         newInstance.setValue(1, lowAlpha);
         newInstance.setValue(2, highAlpha);
@@ -71,14 +75,10 @@ public class ModelClassifier {
         String result = "Not classified!";
 
         try {
-            System.out.println("path " + path);
             Classifier classifier = (Classifier) SerializationHelper.read(path);
-            System.out.println("TESTE 2 ");
-            System.out.println(instances.firstInstance());
-            System.out.println(classifier.classifyInstance(instances.firstInstance()));
             result = classVal.get((int) classifier.classifyInstance(instances.firstInstance()));
         } catch (Exception ex) {
-            //Logger.getLogger(ModelClassifier.class.getName()).log(Level.SEVERE, null, ex);
+            log.info("Failed to classify using {}!", path);
             ex.printStackTrace();
         }
 

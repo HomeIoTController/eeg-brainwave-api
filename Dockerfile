@@ -12,14 +12,13 @@ ENV KAFKA_PORT 9092
 ENV KAFKA_TOPIC eeg
 ENV KAFKA_DEBUG true
 
-ENV ENV docker
-ENV MODELS_PATH /resources
+ENV MODELS_PATH /resources/classifiers
 ENV DATABASE_UTILS_PATH /resources/DatabaseUtils.props
 ENV DEBUG_SECRET adaptive_system
 
 RUN apt-get update
 RUN apt-get install -y maven
-RUN mkdir /resources
+RUN mkdir /resources && mkdir /resources/classifiers
 COPY src/main/resources/DatabaseUtils.props /resources/DatabaseUtils.props
 COPY pom.xml /usr/local/service/pom.xml
 COPY src /usr/local/service/src
