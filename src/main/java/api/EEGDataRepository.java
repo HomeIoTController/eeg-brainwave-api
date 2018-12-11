@@ -9,9 +9,6 @@ import java.util.ArrayList;
 // CRUD refers Create, Read, Update, Delete
 
 public interface EEGDataRepository extends CrudRepository<EEGData, Integer> {
-
     @Query("SELECT DISTINCT userId FROM EEGData")
     ArrayList<Integer> findDistinctUserIds();
-
-
 }

@@ -1,12 +1,25 @@
 package api;
 
+import model.ModelClassifier;
+import model.ModelGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import weka.core.Instances;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "EEGData")
 public class EEGData {
+
+    private static final ModelClassifier classifier = new ModelClassifier();
+
+    private static final Logger log = LoggerFactory.getLogger(EEGData.class);
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -150,6 +163,26 @@ public class EEGData {
 
     public void setFeelingLabel(String feelingLabel) {
         this.feelingLabel = feelingLabel;
+    }
+
+    public HashMap<String, String> classify() {
+        Instances classInstances = classifier.createInstance(this.getTheta(), this.getLowAlpha(), this.getHighAlpha(), this.getLowBeta(), this.getHighBeta(), this.getLowGamma(), this.getMidGamma(), this.getAttention(), this.getMeditation(), this.getBlink());
+
+        HashMap<String, String> classes = new HashMap<>();
+        for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
+
+            Path modelPath = Paths.get(System.getenv("MODELS_PATH"), this.getUserId().toString(), method.name() + ".bin");
+            if (!modelPath.toFile().exists()) {
+                classes.put(method.name(), "Classifier being generated!");
+                continue;
+            }
+
+            String className = classifier.classify(classInstances, modelPath.toString());
+
+            log.info("The method {} classified the instance as {}", method.name(), className);
+            classes.put(method.name(), className);
+        }
+        return classes;
     }
 
 }

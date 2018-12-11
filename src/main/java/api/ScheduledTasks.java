@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 
 import model.ModelGenerator;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -32,7 +31,7 @@ public class ScheduledTasks {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
-    private ModelGenerator mg;
+    private ModelGenerator modelGenerator;
     private InstanceQuery instanceQuery;
 
     {
@@ -42,8 +41,8 @@ public class ScheduledTasks {
         File databaseUtilsFile = new File(System.getenv("DATABASE_UTILS_PATH"));
 
         try {
-            mg = new ModelGenerator();
-            instanceQuery = mg.configDBConnection(databaseUtilsFile, mysqlUser, mysqlPassword, databaseUrl);
+            modelGenerator = new ModelGenerator();
+            instanceQuery = modelGenerator.configDBConnection(databaseUtilsFile, mysqlUser, mysqlPassword, databaseUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,7 +66,7 @@ public class ScheduledTasks {
             "lowGamma, midGamma, attention, meditation, blink, feelingLabel " +
                     "FROM EEGData WHERE userId = " + userId.toString();
 
-            Instances dataSet = mg.loadDataSetFromDB(instanceQuery, query);
+            Instances dataSet = modelGenerator.loadDataSetFromDB(instanceQuery, query);
 
             // Divide dataSet to train dataSet 80% and test dataSet 20%
             int trainSize = (int) Math.round(dataSet.numInstances() * 0.8);
@@ -98,14 +97,14 @@ public class ScheduledTasks {
 
                 try {
                     // Build classifier with train DataSet
-                    Classifier classifier = mg.buildClassifier(trainDataSet, method);
+                    Classifier classifier = modelGenerator.buildClassifier(trainDataSet, method);
 
-                    String evalSummary = mg.evaluateModel(classifier, trainDataSet, testDataSet);
+                    String evalSummary = modelGenerator.evaluateModel(classifier, trainDataSet, testDataSet);
                     log.info("Evaluation for {}: {}", method.name(), evalSummary);
 
                     // Save model
                     Path modelPath = Paths.get(modelsDirectoryPath.toString(), method.name() + ".bin");
-                    mg.saveModel(classifier, modelPath.toString());
+                    modelGenerator.saveModel(classifier, modelPath.toString());
 
                 } catch(Exception e) {
                     log.info("Failed to generate model: {}", method.name());
