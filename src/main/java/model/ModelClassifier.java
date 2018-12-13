@@ -79,7 +79,6 @@ public class ModelClassifier {
             result = classVal.get((int) classifier.classifyInstance(instances.firstInstance()));
         } catch (Exception ex) {
             log.info("Failed to classify using {}!", path);
-            ex.printStackTrace();
         }
 
         return result;

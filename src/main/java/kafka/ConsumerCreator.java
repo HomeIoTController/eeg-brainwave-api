@@ -5,11 +5,12 @@ import java.util.Properties;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
-class ConsumerCreator {
-    static Consumer<Long, String> createConsumer() {
+public class ConsumerCreator {
+    public static Consumer<Long, String> createConsumer() {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, IKafkaConstants.KAFKA_BROKERS);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, IKafkaConstants.GROUP_ID_CONFIG);
@@ -19,7 +20,11 @@ class ConsumerCreator {
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, IKafkaConstants.OFFSET_RESET_EARLIER);
         Consumer<Long, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Collections.singletonList(IKafkaConstants.TOPIC_NAME));
+
+        // The EEG data for all users will come in partition 0
+        TopicPartition partition0 = new TopicPartition(IKafkaConstants.TOPIC_NAME, 0);
+        consumer.assign(Collections.singletonList(partition0));
+
         return consumer;
     }
 }

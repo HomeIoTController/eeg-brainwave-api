@@ -17,8 +17,6 @@ import javax.persistence.*;
 @Table(name = "EEGData")
 public class EEGData {
 
-    private static final ModelClassifier classifier = new ModelClassifier();
-
     private static final Logger log = LoggerFactory.getLogger(EEGData.class);
 
     @Id
@@ -166,6 +164,7 @@ public class EEGData {
     }
 
     public HashMap<String, String> classify() {
+        final ModelClassifier classifier = new ModelClassifier();
         Instances classInstances = classifier.createInstance(this.getTheta(), this.getLowAlpha(), this.getHighAlpha(), this.getLowBeta(), this.getHighBeta(), this.getLowGamma(), this.getMidGamma(), this.getAttention(), this.getMeditation(), this.getBlink());
 
         HashMap<String, String> classes = new HashMap<>();
@@ -179,7 +178,7 @@ public class EEGData {
 
             String className = classifier.classify(classInstances, modelPath.toString());
 
-            log.info("The method {} classified the instance as {}", method.name(), className);
+            //log.info("The method {} classified the instance as {}", method.name(), className);
             classes.put(method.name(), className);
         }
         return classes;
