@@ -18,4 +18,4 @@ This app enables storing and classifying `eeg` data coming from the [eeg-brainwa
     * ![setup_options](./READMEImages/setup_options.png)
     * Select `Remote Application - Docker` and click `Run`
 
-  * This will connect you directly to the Docker container at port `8080`. For more informations check the `docker-compose.yml` at [compose](https://github.com/HomeIoTController/compose)
+  * This will connect you directly to the Docker container at port `8081`. For more informations check the `docker-compose.yml` at [compose](https://github.com/HomeIoTController/compose)
