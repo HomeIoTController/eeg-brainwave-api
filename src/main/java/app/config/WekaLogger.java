@@ -1,4 +1,4 @@
-package config;
+package app.config;
 
 import org.slf4j.LoggerFactory;
 import weka.core.logging.Logger;

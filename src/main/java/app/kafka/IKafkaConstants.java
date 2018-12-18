@@ -1,4 +1,4 @@
-package kafka;
+package app.kafka;
 
 public interface IKafkaConstants {
     String KAFKA_BROKERS = System.getenv("KAFKA_SERVER") + ":" + System.getenv("KAFKA_PORT");

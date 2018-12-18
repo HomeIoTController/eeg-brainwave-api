@@ -1,4 +1,4 @@
-package model;
+package app.datamining;
 
 import java.util.ArrayList;
 

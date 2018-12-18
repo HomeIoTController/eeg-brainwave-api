@@ -1,5 +1,7 @@
 package model;
 
+import app.datamining.ModelClassifier;
+import app.datamining.ModelGenerator;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Attribute;
 import weka.core.Debug;

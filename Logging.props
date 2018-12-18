@@ -4,7 +4,7 @@
 # Version: $Revision: 11644 $
 
 # the logging class to use
-weka.core.logging.Logger=config.WekaLogger
+weka.core.logging.Logger=app.config.WekaLogger
 #weka.core.logging.Logger=weka.core.logging.ConsoleLogger
 #weka.core.logging.Logger=weka.core.logging.FileLogger
 

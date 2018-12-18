@@ -4,14 +4,14 @@ This app enables storing and classifying `eeg` data coming from the [eeg-brainwa
 
 ## Getting Started
 
-* To run this api just follow the steps on [compose](https://github.com/HomeIoTController/compose)
+* To run this controller just follow the steps on [compose](https://github.com/HomeIoTController/compose)
 
 ## Debugging
 
 * To Debug this API you will need to:
   * Run [compose](https://github.com/HomeIoTController/compose)
-  * Turn off the `eeg-brainwave-api` service
-    * `docker-compose stop eeg-brainwave-api`
+  * Turn off the `eeg-brainwave-controller` service
+    * `docker-compose stop eeg-brainwave-controller`
   * Run the following command:
     * `sudo echo "127.0.0.1       kafka-server" >> /etc/hosts`
   * Open this project with IntelliJ

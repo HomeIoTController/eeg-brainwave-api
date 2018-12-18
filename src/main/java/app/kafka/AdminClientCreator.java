@@ -1,4 +1,4 @@
-package kafka;
+package app.kafka;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.TopicListing;

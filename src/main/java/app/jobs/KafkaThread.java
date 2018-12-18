@@ -1,9 +1,11 @@
-package api;
+package app.jobs;
 
-import kafka.AdminClientCreator;
-import kafka.ConsumerCreator;
-import kafka.IKafkaConstants;
-import kafka.ProducerCreator;
+import app.kafka.AdminClientCreator;
+import app.kafka.ConsumerCreator;
+import app.kafka.IKafkaConstants;
+import app.kafka.ProducerCreator;
+import app.model.EEGData;
+import app.model.EEGDataRepository;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreatePartitionsResult;
 import org.apache.kafka.clients.admin.NewPartitions;

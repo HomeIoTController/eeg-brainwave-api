@@ -21,6 +21,7 @@ RUN apt-get install -y maven
 RUN mkdir /resources && mkdir /resources/classifiers
 COPY src/main/resources/DatabaseUtils.props /resources/DatabaseUtils.props
 COPY pom.xml /usr/local/service/pom.xml
+COPY Logging.props /usr/local/service/Logging.props
 COPY src /usr/local/service/src
 COPY wait-for-it.sh /usr/local/service/wait-for-it.sh
 WORKDIR /usr/local/service

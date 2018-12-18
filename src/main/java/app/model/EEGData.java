@@ -1,7 +1,7 @@
-package api;
+package app.model;
 
-import model.ModelClassifier;
-import model.ModelGenerator;
+import app.datamining.ModelClassifier;
+import app.datamining.ModelGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import weka.core.Instances;

@@ -1,4 +1,4 @@
-package api;
+package app.jobs;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -7,7 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import model.ModelGenerator;
+import app.datamining.ModelGenerator;
+import app.model.EEGDataRepository;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
