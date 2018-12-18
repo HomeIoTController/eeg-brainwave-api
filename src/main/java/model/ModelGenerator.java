@@ -32,7 +32,7 @@ public class ModelGenerator {
                 dataset.setClassIndex(dataset.numAttributes() - 1);
             }
         } catch (Exception ex) {
-            log.info("Error while loading data set!");
+            log.error("Error while loading data set!");
         }
 
         return dataset;
@@ -60,7 +60,7 @@ public class ModelGenerator {
                 dataset.setClassIndex(dataset.numAttributes() - 1);
             }
         } catch (Exception ex) {
-            log.info("Error while loading data set!");
+            log.error("Error while loading data set!");
         }
 
         return dataset;
@@ -86,7 +86,7 @@ public class ModelGenerator {
             classifier.buildClassifier(trainDataSet);
             return classifier;
         } catch (Exception ex) {
-            log.info("Error while creating classifier {}!", method.name());
+            log.error("Error while creating classifier {}!", method.name());
         }
         return null;
     }
@@ -98,7 +98,7 @@ public class ModelGenerator {
             eval = new Evaluation(trainDataSet);
             eval.evaluateModel(model, testDataSet);
         } catch (Exception ex) {
-            log.info("Error while evaluating classifier!");
+            log.error("Error while evaluating classifier!");
         }
         return eval.toSummaryString("", true);
     }
@@ -108,7 +108,7 @@ public class ModelGenerator {
         try {
             SerializationHelper.write(modelPath, model);
         } catch (Exception ex) {
-            log.info("Failed to save classifier at {}!", modelPath);
+            log.error("Failed to save classifier at {}!", modelPath);
         }
     }
 

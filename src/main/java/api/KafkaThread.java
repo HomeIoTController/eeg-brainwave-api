@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -55,7 +54,8 @@ public class KafkaThread extends Thread {
     private void runConsumer() {
         int noMessageFound = 0;
         while (true) {
-            System.out.println("Pulling data!!!");
+            log.info("Pulling data!!!");
+
             ConsumerRecords<Long, String> consumerRecords = consumer.poll(Duration.ofSeconds(2));
             // 1000 is the time in milliseconds consumer will wait if no record is found at broker.
             if (consumerRecords.count() == 0) {
@@ -68,10 +68,10 @@ public class KafkaThread extends Thread {
             }
             for (ConsumerRecord<Long, String> record : consumerRecords) {
 
-                System.out.println("Record Key " + record.key());
-                System.out.println("Record value " + record.value());
-                System.out.println("Record partition " + record.partition());
-                System.out.println("Record offset " + record.offset());
+                log.info("Record Key " + record.key());
+                log.info("Record value " + record.value());
+                log.info("Record partition " + record.partition());
+                log.info("Record offset " + record.offset());
 
                 EEGData eegData = gson.fromJson(record.value(), EEGData.class);
                 eegDataRepository.save(eegData);
@@ -104,12 +104,11 @@ public class KafkaThread extends Thread {
     private void runProducer(ProducerRecord<Long, String> record) {
         try {
             RecordMetadata metadata = producer.send(record).get();
-            System.out.println("Record sent with key " + record.key() + " to partition " + metadata.partition()
+            log.info("Record sent with key " + record.key() + " to partition " + metadata.partition()
                     + " with offset " + metadata.offset());
         }
         catch (ExecutionException | InterruptedException e) {
-            System.out.println("Error in sending record");
-            System.out.println(e);
+            log.error("Error in sending record! Message: " + e.getMessage());
         }
     }
 

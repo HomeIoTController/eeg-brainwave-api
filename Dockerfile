@@ -26,4 +26,4 @@ COPY wait-for-it.sh /usr/local/service/wait-for-it.sh
 WORKDIR /usr/local/service
 RUN mvn package
 
-ENTRYPOINT chmod 777 ./wait-for-it.sh && ./wait-for-it.sh -t 40 eeg-db:3307 && java -jar target/eeg-brainwave-api-1.0-SNAPSHOT.jar
+ENTRYPOINT chmod 777 ./wait-for-it.sh && ./wait-for-it.sh -t 120 eeg-db:3307 && java -jar target/eeg-brainwave-api-1.0-SNAPSHOT.jar
