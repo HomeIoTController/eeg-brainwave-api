@@ -20,6 +20,11 @@ public class UserState {
     public UserState() {
     }
 
+    public UserState(Integer userId, String state) {
+        this.userId = userId;
+        this.state = state;
+    }
+
     public UserState(Integer id, Integer userId, String state) {
         this.id = id;
         this.userId = userId;

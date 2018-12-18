@@ -4,10 +4,11 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import app.datamining.ModelGenerator;
+import app.model.EEGData;
 import app.model.EEGDataRepository;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
@@ -26,14 +27,16 @@ import weka.filters.unsupervised.attribute.Normalize;
 public class ScheduledTasks {
 
     @Autowired
-    EEGDataRepository eegDataRepository;
+    private EEGDataRepository eegDataRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+    private final Integer minNumberOfClasses = 2;
 
     private ModelGenerator modelGenerator;
     private InstanceQuery instanceQuery;
+    private Filter filter;
 
     {
         String mysqlUser = System.getenv("DB_USERNAME");
@@ -42,6 +45,7 @@ public class ScheduledTasks {
         File databaseUtilsFile = new File(System.getenv("DATABASE_UTILS_PATH"));
 
         try {
+            filter = new Normalize();
             modelGenerator = new ModelGenerator();
             instanceQuery = modelGenerator.configDBConnection(databaseUtilsFile, mysqlUser, mysqlPassword, databaseUrl);
         } catch (Exception e) {
@@ -51,21 +55,30 @@ public class ScheduledTasks {
 
     @Scheduled(cron = "*/60 * * * * *" )
     public void generateClassifiers() throws Exception {
-        log.info("The time is now {}", dateFormat.format(new Date()));
+        log.info("Generating Classifiers at {}", dateFormat.format(new Date()));
 
-        Filter filter = new Normalize();
-        ArrayList<Integer> usersIds = eegDataRepository.findDistinctUserIds();
+        /* We want to filter users that have EEG data labeled for at least 2 classes  */
+        HashMap<Integer, Integer> users = new HashMap<>();
+        for (EEGData eegData : eegDataRepository.findDistinctUserIdsAndStates()) {
+            users.putIfAbsent(eegData.getUserId(), 0);
+            users.replace(eegData.getUserId(), users.get(eegData.getUserId()) + 1);
+        }
+        List<Integer> usersIds = users.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue() >= minNumberOfClasses)
+                .map(e -> e.getKey())
+                .collect(Collectors.toList());
 
-        log.info("Number of users {}", usersIds.size());
+        log.info("Number of users: {}", usersIds.size());
 
         // Loading instances for each user
         for (Integer userId: usersIds) {
 
-            log.info("User ID {}", userId.toString());
+            log.info("User ID: {}", userId.toString());
 
             String query = "SELECT theta, lowAlpha, highAlpha, lowBeta, highBeta, " +
-            "lowGamma, midGamma, attention, meditation, blink, feelingLabel " +
-                    "FROM EEGData WHERE userId = " + userId.toString();
+            "lowGamma, midGamma, attention, meditation, blink, state " +
+                    "FROM EEGData WHERE state != '?' && userId = " + userId.toString();
 
             Instances dataSet = modelGenerator.loadDataSetFromDB(instanceQuery, query);
 
@@ -94,7 +107,7 @@ public class ScheduledTasks {
             // Evaluate classifier with test DataSet
             for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
 
-                log.info("Generating models for: {}", method.name());
+                log.info("Generating model for: {}", method.name());
 
                 try {
                     // Build classifier with train DataSet

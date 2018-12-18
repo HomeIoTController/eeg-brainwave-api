@@ -2,26 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7ec59551-0c0b-452d-951f-9b28f2fe29f3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/app/controller/UserStateController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/UserState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/app/model/UserStateRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DatabaseUtils.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logging.props" beforeDir="false" afterPath="$PROJECT_DIR$/Logging.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/api/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/api/EEGController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/EEGController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/api/EEGData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/EEGData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/api/EEGDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/EEGDataRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/api/KafkaThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/jobs/KafkaThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/api/ScheduledTasks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/jobs/ScheduledTasks.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/config/WekaLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/config/WekaLogger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kafka/AdminClientCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/kafka/AdminClientCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kafka/ConsumerCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/kafka/ConsumerCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kafka/IKafkaConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/kafka/IKafkaConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kafka/ProducerCreator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/kafka/ProducerCreator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/ModelClassifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/datamining/ModelClassifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/ModelGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/datamining/ModelGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/controller/UserStateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/controller/UserStateController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/datamining/ModelClassifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/datamining/ModelClassifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/jobs/ScheduledTasks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/jobs/ScheduledTasks.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/EEGData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/EEGData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/EEGDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/EEGDataRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/UserState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/UserState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/UserStateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/UserStateRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/model/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/model/Test.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -37,113 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="64" column="21" selection-start-line="64" selection-start-column="21" selection-end-line="64" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/app/model/UserState.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="499">
-              <caret line="51" column="1" lean-forward="true" selection-start-line="51" selection-start-column="1" selection-end-line="51" selection-end-column="1" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#597#598#0" expanded="true" />
-                <element signature="e#622#623#0" expanded="true" />
-                <element signature="e#659#660#0" expanded="true" />
-                <element signature="e#687#688#0" expanded="true" />
-                <element signature="e#721#722#0" expanded="true" />
-                <element signature="e#750#751#0" expanded="true" />
-                <element signature="e#795#796#0" expanded="true" />
-                <element signature="e#831#832#0" expanded="true" />
-                <element signature="e#863#864#0" expanded="true" />
-                <element signature="e#891#892#0" expanded="true" />
-                <element signature="e#933#934#0" expanded="true" />
-                <element signature="e#967#968#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Dockerfile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="26" selection-start-line="26" selection-start-column="26" selection-end-line="26" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/app/model/EEGData.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="36" column="32" selection-start-line="19" selection-start-column="4" selection-end-line="36" selection-end-column="32" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/app/model/EEGDataRepository.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="45" lean-forward="true" selection-start-line="11" selection-start-column="4" selection-end-line="12" selection-end-column="45" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/app/model/UserStateRepository.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/app/jobs/ScheduledTasks.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="52" lean-forward="true" selection-start-line="13" selection-start-column="52" selection-end-line="13" selection-end-column="52" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/app/controller/EEGController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="30" column="5" lean-forward="true" selection-start-line="26" selection-start-column="3" selection-end-line="30" selection-end-column="5" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/app/controller/UserStateController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="22" column="32" lean-forward="true" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/app/config/WekaLogger.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+            <state relative-caret-position="44">
+              <caret line="109" column="42" lean-forward="true" selection-start-line="109" selection-start-column="42" selection-end-line="109" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -163,10 +50,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>runProducer</find>
-      <find>TESTEEEE11</find>
-      <find>OPAAA</find>
-      <find>INIT</find>
       <find>userId</find>
       <find>The time is now</find>
       <find>partitionCount</find>
@@ -189,10 +72,14 @@
       <find>System.</find>
       <find>javax.xml.bind</find>
       <find>topicListings</find>
-      <find>eegDataRepository</find>
       <find>EEGDataRepository</find>
-      <find>userStateRepository</find>
       <find>DatabaseUtils</find>
+      <find>feelingLabel</find>
+      <find>userStateRepository</find>
+      <find>modelGenerator</find>
+      <find>eegDataRepository</find>
+      <find>app.model.EEGDataRepository.findDistinctUserIdsAndStates</find>
+      <find>scheduledTasks</find>
     </findStrings>
     <replaceStrings>
       <replace>//log.info</replace>
@@ -204,8 +91,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/resources/DatabaseUtils.props" />
-        <option value="$PROJECT_DIR$/src/main/java/ModelClassifier.java" />
         <option value="$PROJECT_DIR$/src/main/java/ModelGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/java/Application.java" />
         <option value="$PROJECT_DIR$/src/main/java/EEGData.java" />
@@ -216,7 +101,6 @@
         <option value="$PROJECT_DIR$/src/main/resources/application-dev.properties" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/src/main/java/api/KafkaConsumer.java" />
-        <option value="$PROJECT_DIR$/src/test/java/model/Test.java" />
         <option value="$PROJECT_DIR$/src/main/java/config/JobExecutorConfig.java" />
         <option value="$PROJECT_DIR$/src/main/java/api/KafkaConsumerThread.java" />
         <option value="$PROJECT_DIR$/src/main/java/kafka/CustomSerializer.java" />
@@ -249,11 +133,15 @@
         <option value="$PROJECT_DIR$/src/main/java/app/config/controller/EEGController.java" />
         <option value="$PROJECT_DIR$/src/main/java/app/config/WekaLogger.java" />
         <option value="$PROJECT_DIR$/Logging.props" />
-        <option value="$PROJECT_DIR$/src/main/java/app/model/UserState.java" />
-        <option value="$PROJECT_DIR$/src/main/java/app/model/EEGDataRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/app/controller/UserStateController.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/app/model/EEGData.java" />
+        <option value="$PROJECT_DIR$/src/test/java/model/Test.java" />
+        <option value="$PROJECT_DIR$/src/main/java/app/datamining/ModelClassifier.java" />
+        <option value="$PROJECT_DIR$/src/main/java/app/model/UserState.java" />
         <option value="$PROJECT_DIR$/src/main/java/app/model/UserStateRepository.java" />
+        <option value="$PROJECT_DIR$/src/main/java/app/controller/UserStateController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/app/model/EEGDataRepository.java" />
+        <option value="$PROJECT_DIR$/src/main/java/app/jobs/ScheduledTasks.java" />
       </list>
     </option>
   </component>
@@ -267,6 +155,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -316,7 +205,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="datamining" type="462c0819:PsiDirectoryNode" />
+              <item name="jobs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="eegbrainwaveclassifier" type="b2602c69:ProjectViewProjectNode" />
@@ -329,31 +218,17 @@
             </path>
             <path>
               <item name="eegbrainwaveclassifier" type="b2602c69:ProjectViewProjectNode" />
-              <item name="eeg-brainwave-api" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="eegbrainwaveclassifier" type="b2602c69:ProjectViewProjectNode" />
-              <item name="eeg-brainwave-api" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="eegbrainwaveclassifier" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545142222805" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545166299078" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -361,15 +236,17 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
       <recent name="model" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/src/main/resources" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
   </component>
@@ -474,7 +351,7 @@
     <frame x="0" y="33" width="1440" height="757" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3297568" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.33404863" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -483,7 +360,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32932332" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49928468" visible="true" weight="0.33233082" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49928468" visible="true" weight="0.33233082" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -547,8 +424,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/model/resources.properties" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/api/AppConfig.java" />
     <entry file="file://$PROJECT_DIR$/src/main/resources/application-dev.properties" />
     <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor">
@@ -578,16 +453,6 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/kafka/CustomPartitioner.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/kafka/CustomObjectDeserializer.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/kafka/CustomSerializer.java" />
-    <entry file="file://$PROJECT_DIR$/src/test/java/model/Test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="33" column="48" selection-start-line="33" selection-start-column="48" selection-end-line="33" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/kafka/kafka-clients/2.1.0/kafka-clients-2.1.0.jar!/org/apache/kafka/clients/ClusterConnectionStates.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="151">
@@ -733,16 +598,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/app/datamining/ModelClassifier.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-104">
-          <caret line="50" column="59" selection-start-line="50" selection-start-column="59" selection-end-line="50" selection-end-column="59" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/app/kafka/AdminClientCreator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -770,26 +625,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/app/jobs/KafkaThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/app/jobs/ScheduledTasks.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/app/Application.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -814,44 +649,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/app/model/EEGData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="36" column="32" selection-start-line="19" selection-start-column="4" selection-end-line="36" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/app/config/WekaLogger.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/app/model/UserState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="51" column="1" lean-forward="true" selection-start-line="51" selection-start-column="1" selection-end-line="51" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#597#598#0" expanded="true" />
-            <element signature="e#622#623#0" expanded="true" />
-            <element signature="e#659#660#0" expanded="true" />
-            <element signature="e#687#688#0" expanded="true" />
-            <element signature="e#721#722#0" expanded="true" />
-            <element signature="e#750#751#0" expanded="true" />
-            <element signature="e#795#796#0" expanded="true" />
-            <element signature="e#831#832#0" expanded="true" />
-            <element signature="e#863#864#0" expanded="true" />
-            <element signature="e#891#892#0" expanded="true" />
-            <element signature="e#933#934#0" expanded="true" />
-            <element signature="e#967#968#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -863,20 +666,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/app/model/EEGDataRepository.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/DatabaseUtils.props">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="45" lean-forward="true" selection-start-line="11" selection-start-column="4" selection-end-line="12" selection-end-column="45" />
+        <state relative-caret-position="238">
+          <caret line="14" column="24" lean-forward="true" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/model/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="131">
+          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/app/controller/UserStateController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/app/datamining/ModelClassifier.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="22" column="32" lean-forward="true" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
+        <state relative-caret-position="158">
+          <caret line="36" column="33" lean-forward="true" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -885,7 +695,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/app/controller/EEGController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
+        <state relative-caret-position="280">
           <caret line="30" column="5" lean-forward="true" selection-start-line="26" selection-start-column="3" selection-end-line="30" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -893,17 +703,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/DatabaseUtils.props">
+    <entry file="file://$PROJECT_DIR$/DatabaseUtils.props">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/app/jobs/KafkaThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="36" column="10" lean-forward="true" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="10" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/app/model/UserState.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
-          <caret line="14" column="24" lean-forward="true" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
+          <caret line="17" column="24" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/app/model/EEGDataRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/app/model/EEGData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1334">
+          <caret line="165" column="47" selection-start-line="165" selection-start-column="47" selection-end-line="165" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3598#3599#0" expanded="true" />
+            <element signature="e#3632#3633#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/app/model/UserStateRepository.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="52" lean-forward="true" selection-start-line="13" selection-start-column="52" selection-end-line="13" selection-end-column="52" />
+        <state relative-caret-position="306">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/app/controller/UserStateController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home/lib/src.zip!/java.base/java/util/function/Function.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="48" column="6" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/app/jobs/ScheduledTasks.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="109" column="42" lean-forward="true" selection-start-line="109" selection-start-column="42" selection-end-line="109" selection-end-column="42" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

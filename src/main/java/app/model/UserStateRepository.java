@@ -12,4 +12,7 @@ import java.util.ArrayList;
 public interface UserStateRepository extends CrudRepository<UserState, Integer> {
     @Query(value="SELECT * FROM UserState WHERE userId = ?1",nativeQuery=true)
     ArrayList<UserState> findByUserId(Integer userId);
+
+    @Query(value="DELETE FROM UserState WHERE userId = ?1",nativeQuery=true)
+    Boolean deleteByUserId(Integer userId);
 }

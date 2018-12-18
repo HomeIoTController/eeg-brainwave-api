@@ -34,11 +34,11 @@ public class EEGData {
     private Integer attention;
     private Integer meditation;
     private Integer blink;
-    private String feelingLabel;
+    private String state;
 
     public EEGData(){}
 
-    public EEGData(Integer id, Integer userId, Date time, Integer theta, Integer lowAlpha, Integer highAlpha, Integer lowBeta, Integer highBeta, Integer lowGamma, Integer midGamma, Integer attention, Integer meditation, Integer blink, String feelingLabel) {
+    public EEGData(Integer id, Integer userId, Date time, Integer theta, Integer lowAlpha, Integer highAlpha, Integer lowBeta, Integer highBeta, Integer lowGamma, Integer midGamma, Integer attention, Integer meditation, Integer blink, String state) {
         this.id = id;
         this.userId = userId;
         this.time = time;
@@ -52,7 +52,7 @@ public class EEGData {
         this.attention = attention;
         this.meditation = meditation;
         this.blink = blink;
-        this.feelingLabel = feelingLabel;
+        this.state = state;
     }
 
     public Integer getId() {
@@ -155,12 +155,12 @@ public class EEGData {
         this.blink = blink;
     }
 
-    public String getFeelingLabel() {
-        return feelingLabel;
+    public String getState() {
+        return state;
     }
 
-    public void setFeelingLabel(String feelingLabel) {
-        this.feelingLabel = feelingLabel;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public HashMap<String, String> classify() {

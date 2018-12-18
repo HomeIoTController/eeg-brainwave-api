@@ -45,7 +45,7 @@ public class ModelClassifier {
         classVal.add("HURT");
         classVal.add("SAD");
         classVal.add("?");
-        attributes.add(new Attribute("feelingLabel", classVal));
+        attributes.add(new Attribute("state", classVal));
 
         dataRaw = new Instances("TestInstances", attributes, 0);
         dataRaw.setClassIndex(dataRaw.numAttributes() - 1);

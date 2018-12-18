@@ -32,7 +32,7 @@ public class Test {
 
         InstanceQuery instanceQuery = mg.configDBConnection(databaseUtilsFile, mysqlUser, mysqlPassword, databaseUrl);
 
-        String query = "SELECT theta, lowAlpha, highAlpha, lowBeta, highBeta, lowGamma, midGamma, attention, meditation, blink, feelingLabel FROM EEGData";
+        String query = "SELECT theta, lowAlpha, highAlpha, lowBeta, highBeta, lowGamma, midGamma, attention, meditation, blink, state FROM EEGData";
         Instances dataSet = mg.loadDataSetFromDB(instanceQuery, query);
 
         Filter filter = new Normalize();
