@@ -1,6 +1,7 @@
 package app.datamining;
 
 import java.io.File;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.experiment.InstanceQuery;
+import weka.filters.Filter;
 
 public class ModelGenerator {
 
@@ -41,7 +43,6 @@ public class ModelGenerator {
     public InstanceQuery configDBConnection(File databaseUtilsFile, String user, String password, String databaseUrl) throws Exception {
 
         InstanceQuery instanceQuery = new InstanceQuery();
-
         instanceQuery.setCustomPropsFile(databaseUtilsFile);
         instanceQuery.setDatabaseURL(databaseUrl);
         instanceQuery.setUsername(user);
@@ -87,6 +88,7 @@ public class ModelGenerator {
             return classifier;
         } catch (Exception ex) {
             log.error("Error while creating classifier {}!", method.name());
+            ex.printStackTrace();
         }
         return null;
     }
@@ -96,7 +98,7 @@ public class ModelGenerator {
         try {
             // Evaluate classifier with test dataset
             eval = new Evaluation(trainDataSet);
-            eval.evaluateModel(model, testDataSet);
+            eval.crossValidateModel(model, testDataSet, 10, new Random(1));
         } catch (Exception ex) {
             log.error("Error while evaluating classifier!");
         }
@@ -109,6 +111,15 @@ public class ModelGenerator {
             SerializationHelper.write(modelPath, model);
         } catch (Exception ex) {
             log.error("Failed to save classifier at {}!", modelPath);
+        }
+    }
+
+    public void saveFilter(Filter filter, String filterPath) {
+
+        try {
+            SerializationHelper.write(filterPath, filter);
+        } catch (Exception ex) {
+            log.error("Failed to save filter at {}!", filterPath);
         }
     }
 

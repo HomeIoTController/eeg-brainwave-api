@@ -16,6 +16,7 @@ public class UserState {
     private Integer id;
     private Integer userId;
     private String state;
+    private Boolean deleted;
 
     public UserState() {
     }
@@ -23,12 +24,14 @@ public class UserState {
     public UserState(Integer userId, String state) {
         this.userId = userId;
         this.state = state;
+        this.deleted = false;
     }
 
-    public UserState(Integer id, Integer userId, String state) {
+    public UserState(Integer id, Integer userId, String state, Boolean deleted) {
         this.id = id;
         this.userId = userId;
         this.state = state;
+        this.deleted = deleted;
     }
 
     public Integer getId() {
@@ -53,5 +56,13 @@ public class UserState {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

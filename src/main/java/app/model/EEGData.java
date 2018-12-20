@@ -8,8 +8,8 @@ import weka.core.Instances;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
@@ -35,10 +35,11 @@ public class EEGData {
     private Integer meditation;
     private Integer blink;
     private String state;
+    private Boolean deleted;
 
     public EEGData(){}
 
-    public EEGData(Integer id, Integer userId, Date time, Integer theta, Integer lowAlpha, Integer highAlpha, Integer lowBeta, Integer highBeta, Integer lowGamma, Integer midGamma, Integer attention, Integer meditation, Integer blink, String state) {
+    public EEGData(Integer id, Integer userId, Date time, Integer theta, Integer lowAlpha, Integer highAlpha, Integer lowBeta, Integer highBeta, Integer lowGamma, Integer midGamma, Integer attention, Integer meditation, Integer blink, String state, Boolean deleted) {
         this.id = id;
         this.userId = userId;
         this.time = time;
@@ -53,6 +54,7 @@ public class EEGData {
         this.meditation = meditation;
         this.blink = blink;
         this.state = state;
+        this.deleted = deleted;
     }
 
     public Integer getId() {
@@ -163,9 +165,43 @@ public class EEGData {
         this.state = state;
     }
 
-    public HashMap<String, String> classify() {
-        final ModelClassifier classifier = new ModelClassifier();
-        Instances classInstances = classifier.createInstance(this.getTheta(), this.getLowAlpha(), this.getHighAlpha(), this.getLowBeta(), this.getHighBeta(), this.getLowGamma(), this.getMidGamma(), this.getAttention(), this.getMeditation(), this.getBlink());
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public HashMap<String, String> classify(ArrayList<UserState> userStates) throws Exception {
+        ArrayList<String> attributeNames = new ArrayList<>(
+                Arrays.asList("theta", "lowAlpha", "highAlpha", "lowBeta", "highBeta",
+                        "lowGamma", "midGamma", "attention", "meditation", "blink", "state")
+        );
+        ArrayList<Integer> attributeValues = new ArrayList<>(
+                Arrays.asList(this.getTheta(), this.getLowAlpha(), this.getHighAlpha(), this.getLowBeta(),
+                        this.getHighBeta(), this.getLowGamma(), this.getMidGamma(), this.getAttention(),
+                        this.getMeditation(), this.getBlink())
+        );
+
+        ArrayList<String> classValues = new ArrayList<>(userStates
+                .stream()
+                .map(UserState::getState)
+                .collect(Collectors.toList()));
+
+        // Not enough class values in the database for this userId
+        if (classValues.size() < 2) {
+            HashMap<String, String> classes = new HashMap<>();
+            for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
+                classes.put(method.name(), "Classifier needs states!");
+            }
+            return classes;
+        }
+
+
+        Path filterPath = Paths.get(System.getenv("MODELS_PATH"), this.getUserId().toString(), "FILTER.bin");
+        final ModelClassifier classifier = new ModelClassifier(attributeNames, classValues, filterPath.toString());
+        Instances classInstances = classifier.createInstance(attributeValues);
 
         HashMap<String, String> classes = new HashMap<>();
         for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
@@ -178,7 +214,7 @@ public class EEGData {
 
             String className = classifier.classify(classInstances, modelPath.toString());
 
-            //log.info("The method {} classified the instance as {}", method.name(), className);
+            log.info("The method {} classified the instance as {} for userId {}", method.name(), className, userId.toString());
             classes.put(method.name(), className);
         }
         return classes;

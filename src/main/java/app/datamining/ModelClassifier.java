@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import weka.classifiers.Classifier;
 import weka.core.*;
+import weka.filters.Filter;
 
 public class ModelClassifier {
 
@@ -13,61 +14,41 @@ public class ModelClassifier {
 
     private ArrayList<String> classVal;
     private Instances dataRaw;
+    private Filter filter;
 
-    public ModelClassifier() {
+    public ModelClassifier(ArrayList<String> attributeNames, ArrayList<String> classValues, String filterPath) {
         ArrayList<Attribute> attributes = new ArrayList<>();
-        attributes.add(new Attribute("theta"));
-        attributes.add(new Attribute("lowAlpha"));
-        attributes.add(new Attribute("highAlpha"));
-        attributes.add(new Attribute("lowBeta"));
-        attributes.add(new Attribute("highBeta"));
-        attributes.add(new Attribute("lowGamma"));
-        attributes.add(new Attribute("midGamma"));
-        attributes.add(new Attribute("attention"));
-        attributes.add(new Attribute("meditation"));
-        attributes.add(new Attribute("blink"));
+        classVal = new ArrayList<>(classValues);
 
-        classVal = new ArrayList<>();
-        classVal.add("OPEN");
-        classVal.add("HAPPY");
-        classVal.add("ALIVE");
-        classVal.add("GOOD");
-        classVal.add("LOVE");
-        classVal.add("INTERESTED");
-        classVal.add("POSITIVE");
-        classVal.add("STRONG");
-        classVal.add("ANGRY");
-        classVal.add("DEPRESSED");
-        classVal.add("CONFUSED");
-        classVal.add("HELPLESS");
-        classVal.add("INDIFFERENT");
-        classVal.add("AFRAID");
-        classVal.add("HURT");
-        classVal.add("SAD");
-        classVal.add("?");
-        attributes.add(new Attribute("state", classVal));
-
+        for(int i = 0; i < attributeNames.size(); i++) {
+            String attributeName = attributeNames.get(i);
+            if (i < (attributeNames.size()-1)) {
+                attributes.add(new Attribute(attributeName));
+            } else {
+                attributes.add(new Attribute(attributeName, classVal));
+            }
+        }
         dataRaw = new Instances("TestInstances", attributes, 0);
         dataRaw.setClassIndex(dataRaw.numAttributes() - 1);
+
+        try {
+            filter = (Filter) SerializationHelper.read(filterPath);
+        } catch (Exception e) {
+            log.info("Failed to load filter from path: {}", filterPath);
+            e.printStackTrace();
+        }
     }
 
 
-    public Instances createInstance(int theta, int lowAlpha, int highAlpha, int lowBeta, int highBeta, int lowGamma, int midGamma, int attention, int meditation, int blink) {
-        dataRaw.clear();
-        Instance newInstance = new DenseInstance(11);
-        newInstance.setValue(0, theta);
-        newInstance.setValue(1, lowAlpha);
-        newInstance.setValue(2, highAlpha);
-        newInstance.setValue(3, lowBeta);
-        newInstance.setValue(4, highBeta);
-        newInstance.setValue(5, lowGamma);
-        newInstance.setValue(6, midGamma);
-        newInstance.setValue(7, attention);
-        newInstance.setValue(8, meditation);
-        newInstance.setValue(9, blink);
-
+    public Instances createInstance(ArrayList<Integer> attributeValues) throws Exception {
+        Instance newInstance = new DenseInstance(attributeValues.size()+1);
+        for(int i = 0; i < attributeValues.size(); i++) {
+            newInstance.setValue(i, attributeValues.get(i));
+        }
         dataRaw.add(newInstance);
-        return dataRaw;
+
+        // Normalize dataSet
+        return Filter.useFilter(dataRaw, filter);
     }
 
 
@@ -79,6 +60,7 @@ public class ModelClassifier {
             result = classVal.get((int) classifier.classifyInstance(instances.firstInstance()));
         } catch (Exception ex) {
             log.info("Failed to classify using {}!", path);
+            ex.printStackTrace();
         }
 
         return result;

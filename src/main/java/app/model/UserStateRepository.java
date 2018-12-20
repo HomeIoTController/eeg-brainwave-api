@@ -1,7 +1,9 @@
 package app.model;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -10,9 +12,11 @@ import java.util.ArrayList;
 // CRUD refers Create, Read, Update, Delete
 
 public interface UserStateRepository extends CrudRepository<UserState, Integer> {
-    @Query(value="SELECT * FROM UserState WHERE userId = ?1",nativeQuery=true)
+    @Query(value="SELECT * FROM UserState WHERE userId = ?1 AND (deleted IS NULL OR deleted = 0)",nativeQuery=true)
     ArrayList<UserState> findByUserId(Integer userId);
 
-    @Query(value="DELETE FROM UserState WHERE userId = ?1",nativeQuery=true)
-    Boolean deleteByUserId(Integer userId);
+    @Modifying
+    @Query(value="UPDATE UserState SET deleted = true WHERE userId = ?1 AND (deleted IS NULL OR deleted = 0)",nativeQuery=true)
+    @Transactional
+    Integer deleteByUserId(Integer userId);
 }

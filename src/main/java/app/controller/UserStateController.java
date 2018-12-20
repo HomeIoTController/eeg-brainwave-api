@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/user") // This means URL's start with /user (after Application path)
 public class UserStateController {
 
     private static final Logger log = LoggerFactory.getLogger(UserStateController.class);
 
-    @Autowired // This means to get the bean called userStateRepository
+    @Autowired
     private UserStateRepository userStateRepository;
     @Autowired
     private EEGDataRepository eegDataRepository;
@@ -31,13 +30,17 @@ public class UserStateController {
 
     @PostMapping("/{userId}/states")
     public @ResponseBody
-    Boolean updateByUserId(@PathVariable("userId") int userId, @RequestBody ArrayList<String> userStates) {
+    Boolean updateByUserId(@PathVariable("userId") Integer userId, @RequestBody ArrayList<String> userStates) {
         ArrayList<String> oldUserStates = new ArrayList<>();
         for (UserState oldUserState : userStateRepository.findByUserId(userId)) {
             oldUserStates.add(oldUserState.getState());
         }
-        eegDataRepository.deleteStatesIn(oldUserStates);
-        userStateRepository.deleteByUserId(userId);
+
+        if (oldUserStates.size() > 0) {
+            userStateRepository.deleteByUserId(userId);
+            eegDataRepository.deleteStatesIn(userId, oldUserStates);
+        }
+
         for (String userState : userStates) {
             userStateRepository.save(new UserState(userId, userState));
         }

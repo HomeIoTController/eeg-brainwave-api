@@ -1,7 +1,9 @@
 package app.model;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -9,9 +11,11 @@ import java.util.ArrayList;
 // CRUD refers Create, Read, Update, Delete
 
 public interface EEGDataRepository extends CrudRepository<EEGData, Integer> {
-    @Query("SELECT DISTINCT userId, state FROM EEGData")
-    ArrayList<EEGData> findDistinctUserIdsAndStates();
+    @Query("SELECT DISTINCT userId, state FROM EEGData WHERE state != '?' AND (deleted IS NULL OR deleted = 0)")
+    ArrayList<Object> findDistinctUserIdsAndStates();
 
-    @Query("DELETE FROM EEGData WHERE state IN ?1")
-    Boolean deleteStatesIn(Iterable<String> states);
+    @Modifying
+    @Query("UPDATE EEGData SET deleted = true WHERE userId = ?1 AND state IN ?2 AND (deleted IS NULL OR deleted = 0)")
+    @Transactional
+    Integer deleteStatesIn(Integer userId, Iterable<String> states);
 }

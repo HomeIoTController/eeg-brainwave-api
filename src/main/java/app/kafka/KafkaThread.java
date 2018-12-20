@@ -1,11 +1,8 @@
-package app.jobs;
+package app.kafka;
 
-import app.kafka.AdminClientCreator;
-import app.kafka.ConsumerCreator;
-import app.kafka.IKafkaConstants;
-import app.kafka.ProducerCreator;
 import app.model.EEGData;
 import app.model.EEGDataRepository;
+import app.model.UserStateRepository;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreatePartitionsResult;
 import org.apache.kafka.clients.admin.NewPartitions;
@@ -36,6 +33,9 @@ public class KafkaThread extends Thread {
     @Autowired
     private EEGDataRepository eegDataRepository;
 
+    @Autowired
+    private UserStateRepository userStateRepository;
+
     private static final Logger log = LoggerFactory.getLogger(KafkaThread.class);
 
     private final Consumer<Long, String> consumer = ConsumerCreator.createConsumer();
@@ -50,10 +50,14 @@ public class KafkaThread extends Thread {
     }
 
     public void run() {
-        runConsumer();
+        try {
+            runConsumer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void runConsumer() {
+    private void runConsumer() throws Exception {
         int noMessageFound = 0;
         while (true) {
             log.info("Pulling data!!!");
@@ -92,14 +96,28 @@ public class KafkaThread extends Thread {
                     }
                 }
 
-                runProducer(new ProducerRecord<>(IKafkaConstants.TOPIC_NAME, eegData.getUserId(), eegData.getUserId().longValue(),
-                       gson.toJson(eegData.classify())));
+                // Classify eeg data based on users registered states
+                String classification = gson.toJson(
+                        eegData.classify(
+                                userStateRepository.findByUserId(eegData.getUserId())
+                        )
+                );
+
+                runProducer(
+                        new ProducerRecord<>(
+                                IKafkaConstants.TOPIC_NAME,
+                                eegData.getUserId(),
+                                eegData.getUserId().longValue(),
+                                classification
+                        )
+                );
             }
             // commits the offset of record to broker.
             consumer.commitAsync();
         }
         consumer.close();
         producer.close();
+        adminClient.close();
     }
 
 

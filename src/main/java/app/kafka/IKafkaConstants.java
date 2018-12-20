@@ -2,7 +2,7 @@ package app.kafka;
 
 public interface IKafkaConstants {
     String KAFKA_BROKERS = System.getenv("KAFKA_SERVER") + ":" + System.getenv("KAFKA_PORT");
-    String CLIENT_ID="eeg-api111";
+    String CLIENT_ID="eeg-api";
     String TOPIC_NAME=System.getenv("KAFKA_TOPIC");
     String GROUP_ID_CONFIG="eeg";
     Integer MAX_NO_MESSAGE_FOUND_COUNT=100000;

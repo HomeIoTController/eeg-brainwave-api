@@ -8,7 +8,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import app.datamining.ModelGenerator;
-import app.model.EEGData;
 import app.model.EEGDataRepository;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
@@ -59,14 +58,17 @@ public class ScheduledTasks {
 
         /* We want to filter users that have EEG data labeled for at least 2 classes  */
         HashMap<Integer, Integer> users = new HashMap<>();
-        for (EEGData eegData : eegDataRepository.findDistinctUserIdsAndStates()) {
-            users.putIfAbsent(eegData.getUserId(), 0);
-            users.replace(eegData.getUserId(), users.get(eegData.getUserId()) + 1);
+        for (Object data : eegDataRepository.findDistinctUserIdsAndStates()) {
+            Object[] eegData = (Object[]) data;
+            Integer userId = (Integer) eegData[0];
+            users.putIfAbsent(userId, 0);
+            users.replace(userId, users.get(userId) + 1);
         }
+
         List<Integer> usersIds = users.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue() >= minNumberOfClasses)
-                .map(e -> e.getKey())
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
         log.info("Number of users: {}", usersIds.size());
@@ -78,7 +80,7 @@ public class ScheduledTasks {
 
             String query = "SELECT theta, lowAlpha, highAlpha, lowBeta, highBeta, " +
             "lowGamma, midGamma, attention, meditation, blink, state " +
-                    "FROM EEGData WHERE state != '?' && userId = " + userId.toString();
+                    "FROM EEGData WHERE deleted IS NULL AND state != '?' AND userId = " + userId.toString();
 
             Instances dataSet = modelGenerator.loadDataSetFromDB(instanceQuery, query);
 
@@ -88,7 +90,7 @@ public class ScheduledTasks {
 
             dataSet.randomize(new Debug.Random(1));// if you comment this line the accuracy of the model will be dropped from 96.6% to 80%
 
-            // Normalize dataSet
+            // Normalize dataSet - 0 to 1
             filter.setInputFormat(dataSet);
 
             Instances dataSetNor = Filter.useFilter(dataSet, filter);
@@ -96,7 +98,7 @@ public class ScheduledTasks {
             Instances trainDataSet = new Instances(dataSetNor, 0, trainSize);
             Instances testDataSet = new Instances(dataSetNor, trainSize, testSize);
 
-            // Create and clear models directory for user
+            // Create and clear the user models directory
             Path modelsDirectoryPath = Paths.get(System.getenv("MODELS_PATH"), userId.toString());
             File modelsDirectory = modelsDirectoryPath.toFile();
             if (!modelsDirectory.exists()) {
@@ -104,7 +106,11 @@ public class ScheduledTasks {
             }
             FileUtils.cleanDirectory(modelsDirectory);
 
-            // Evaluate classifier with test DataSet
+            // Save filter for future use while classifying instances
+            Path filterPath = Paths.get(modelsDirectoryPath.toString(), "FILTER.bin");
+            modelGenerator.saveFilter(filter, filterPath.toString());
+
+            // Create and evaluate classifiers with data set
             for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
 
                 log.info("Generating model for: {}", method.name());
