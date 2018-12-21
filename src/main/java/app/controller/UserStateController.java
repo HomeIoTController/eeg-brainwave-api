@@ -1,10 +1,7 @@
 package app.controller;
 
-import app.model.EEGDataRepository;
 import app.model.UserState;
-import app.model.UserStateRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import app.service.UserStateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,35 +12,18 @@ import java.util.ArrayList;
 @RequestMapping(path="/user") // This means URL's start with /user (after Application path)
 public class UserStateController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserStateController.class);
-
     @Autowired
-    private UserStateRepository userStateRepository;
-    @Autowired
-    private EEGDataRepository eegDataRepository;
+    private UserStateService userStateService;
 
     @GetMapping("/{userId}/states")
     public @ResponseBody
     Iterable<UserState> getByUserId(@PathVariable("userId") int userId) {
-        return userStateRepository.findByUserId(userId);
+        return userStateService.getByUserId(userId);
     }
 
     @PostMapping("/{userId}/states")
     public @ResponseBody
     Boolean updateByUserId(@PathVariable("userId") Integer userId, @RequestBody ArrayList<String> userStates) {
-        ArrayList<String> oldUserStates = new ArrayList<>();
-        for (UserState oldUserState : userStateRepository.findByUserId(userId)) {
-            oldUserStates.add(oldUserState.getState());
-        }
-
-        if (oldUserStates.size() > 0) {
-            userStateRepository.deleteByUserId(userId);
-            eegDataRepository.deleteStatesIn(userId, oldUserStates);
-        }
-
-        for (String userState : userStates) {
-            userStateRepository.save(new UserState(userId, userState));
-        }
-        return true;
+        return userStateService.updateByUserId(userId, userStates);
     }
 }

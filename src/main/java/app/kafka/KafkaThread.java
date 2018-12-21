@@ -1,8 +1,7 @@
 package app.kafka;
 
 import app.model.EEGData;
-import app.model.EEGDataRepository;
-import app.model.UserStateRepository;
+import app.service.EEGDataService;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreatePartitionsResult;
 import org.apache.kafka.clients.admin.NewPartitions;
@@ -30,17 +29,14 @@ import com.google.gson.Gson;
 @Component
 public class KafkaThread extends Thread {
 
-    @Autowired
-    private EEGDataRepository eegDataRepository;
-
-    @Autowired
-    private UserStateRepository userStateRepository;
-
     private static final Logger log = LoggerFactory.getLogger(KafkaThread.class);
 
     private final Consumer<Long, String> consumer = ConsumerCreator.createConsumer();
     private final Producer<Long, String> producer = ProducerCreator.createProducer();
     private final AdminClient adminClient = AdminClientCreator.createAdminClient();
+
+    @Autowired
+    private EEGDataService eegDataService;
 
     private final Gson gson = new Gson();
 
@@ -54,6 +50,17 @@ public class KafkaThread extends Thread {
             runConsumer();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void createPartitions(Integer numOfPartitions) {
+        final NewPartitions newPartitions = NewPartitions.increaseTo(numOfPartitions);
+        final Map<String, NewPartitions> request = Collections.singletonMap(IKafkaConstants.TOPIC_NAME, newPartitions);
+        CreatePartitionsResult partitionsResult = adminClient.createPartitions(request);
+        try {
+            partitionsResult.all().get(1000, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            // log.error("Failed to create partitions", e.getCause());
         }
     }
 
@@ -80,28 +87,18 @@ public class KafkaThread extends Thread {
                 log.info("Record offset " + record.offset());
 
                 EEGData eegData = gson.fromJson(record.value(), EEGData.class);
-                eegDataRepository.save(eegData);
+                eegDataService.save(eegData);
 
                 // Increase partition size depending on the number of registered users
                 // UserId grows as 1,2,3,4...
+                // Add 5 extra partitions
                 Integer partitionCount = consumer.partitionsFor(IKafkaConstants.TOPIC_NAME).size();
                 if (eegData.getUserId() >= partitionCount) {
-                    final NewPartitions newPartitions = NewPartitions.increaseTo(eegData.getUserId() + 5);
-                    final Map<String, NewPartitions> request = Collections.singletonMap(IKafkaConstants.TOPIC_NAME, newPartitions);
-                    CreatePartitionsResult partitionsResult = adminClient.createPartitions(request);
-                    try {
-                        partitionsResult.all().get(1000, TimeUnit.SECONDS);
-                    } catch (Exception e) {
-                        // log.error("Failed to create partitions", e.getCause());
-                    }
+                    this.createPartitions(eegData.getUserId() + 5);
                 }
 
-                // Classify eeg data based on users registered states
-                String classification = gson.toJson(
-                        eegData.classify(
-                                userStateRepository.findByUserId(eegData.getUserId())
-                        )
-                );
+                // Classify EEG data based on users registered states
+                String classification = gson.toJson(eegDataService.classify(eegData));
 
                 runProducer(
                         new ProducerRecord<>(
@@ -112,7 +109,7 @@ public class KafkaThread extends Thread {
                         )
                 );
             }
-            // commits the offset of record to broker.
+            // Commits the offset of record to broker.
             consumer.commitAsync();
         }
         consumer.close();

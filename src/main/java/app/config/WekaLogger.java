@@ -10,6 +10,7 @@ public class WekaLogger extends Logger {
     private final String m_LineFeed = System.getProperty("line.separator");
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(WekaLogger.class);
+
     @Override
     protected void doLog(Level level, String msg, String cls, String method, int lineno) {
         switch (level) {

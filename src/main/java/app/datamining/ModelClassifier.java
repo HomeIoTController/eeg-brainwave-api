@@ -16,7 +16,7 @@ public class ModelClassifier {
     private Instances dataRaw;
     private Filter filter;
 
-    public ModelClassifier(ArrayList<String> attributeNames, ArrayList<String> classValues, String filterPath) {
+    public ModelClassifier(ArrayList<String> attributeNames, ArrayList<String> classValues, String filterPath) throws Exception {
         ArrayList<Attribute> attributes = new ArrayList<>();
         classVal = new ArrayList<>(classValues);
 
@@ -34,8 +34,7 @@ public class ModelClassifier {
         try {
             filter = (Filter) SerializationHelper.read(filterPath);
         } catch (Exception e) {
-            log.info("Failed to load filter from path: {}", filterPath);
-            e.printStackTrace();
+            throw new Exception("Failed to load filter from path: " + filterPath);
         }
     }
 

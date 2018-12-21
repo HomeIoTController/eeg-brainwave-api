@@ -1,23 +1,12 @@
 package app.model;
 
-import app.datamining.ModelClassifier;
-import app.datamining.ModelGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import weka.core.Instances;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "EEGData")
 public class EEGData {
-
-    private static final Logger log = LoggerFactory.getLogger(EEGData.class);
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -171,58 +160,6 @@ public class EEGData {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
-    }
-
-    public HashMap<String, String> classify(ArrayList<UserState> userStates) {
-        ArrayList<String> attributeNames = new ArrayList<>(
-                Arrays.asList("theta", "lowAlpha", "highAlpha", "lowBeta", "highBeta",
-                        "lowGamma", "midGamma", "attention", "meditation", "blink", "state")
-        );
-        ArrayList<Integer> attributeValues = new ArrayList<>(
-                Arrays.asList(this.getTheta(), this.getLowAlpha(), this.getHighAlpha(), this.getLowBeta(),
-                        this.getHighBeta(), this.getLowGamma(), this.getMidGamma(), this.getAttention(),
-                        this.getMeditation(), this.getBlink())
-        );
-
-        ArrayList<String> classValues = new ArrayList<>(userStates
-                .stream()
-                .map(UserState::getState)
-                .collect(Collectors.toList()));
-
-        // Not enough class values in the database for this userId
-        if (classValues.size() < 2) {
-            HashMap<String, String> classes = new HashMap<>();
-            for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
-                classes.put(method.name(), "Classifier needs states!");
-            }
-            return classes;
-        }
-
-        HashMap<String, String> classes = new HashMap<>();
-        try {
-            Path filterPath = Paths.get(System.getenv("MODELS_PATH"), this.getUserId().toString(), "FILTER.bin");
-            final ModelClassifier classifier = new ModelClassifier(attributeNames, classValues, filterPath.toString());
-            Instances classInstances = classifier.createInstance(attributeValues);
-
-            for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
-
-                Path modelPath = Paths.get(System.getenv("MODELS_PATH"), this.getUserId().toString(), method.name() + ".bin");
-                if (!modelPath.toFile().exists()) {
-                    classes.put(method.name(), "Classifier being generated!");
-                    continue;
-                }
-
-                String className = classifier.classify(classInstances, modelPath.toString());
-
-                log.info("The method {} classified the instance as {} for userId {}", method.name(), className, userId.toString());
-                classes.put(method.name(), className);
-            }
-        } catch(Exception e) {
-            for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
-                classes.put(method.name(), "Classifier being generated!");
-            }
-        }
-        return classes;
     }
 
 }
