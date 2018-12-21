@@ -173,7 +173,7 @@ public class EEGData {
         this.deleted = deleted;
     }
 
-    public HashMap<String, String> classify(ArrayList<UserState> userStates) throws Exception {
+    public HashMap<String, String> classify(ArrayList<UserState> userStates) {
         ArrayList<String> attributeNames = new ArrayList<>(
                 Arrays.asList("theta", "lowAlpha", "highAlpha", "lowBeta", "highBeta",
                         "lowGamma", "midGamma", "attention", "meditation", "blink", "state")
@@ -198,24 +198,29 @@ public class EEGData {
             return classes;
         }
 
-
-        Path filterPath = Paths.get(System.getenv("MODELS_PATH"), this.getUserId().toString(), "FILTER.bin");
-        final ModelClassifier classifier = new ModelClassifier(attributeNames, classValues, filterPath.toString());
-        Instances classInstances = classifier.createInstance(attributeValues);
-
         HashMap<String, String> classes = new HashMap<>();
-        for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
+        try {
+            Path filterPath = Paths.get(System.getenv("MODELS_PATH"), this.getUserId().toString(), "FILTER.bin");
+            final ModelClassifier classifier = new ModelClassifier(attributeNames, classValues, filterPath.toString());
+            Instances classInstances = classifier.createInstance(attributeValues);
 
-            Path modelPath = Paths.get(System.getenv("MODELS_PATH"), this.getUserId().toString(), method.name() + ".bin");
-            if (!modelPath.toFile().exists()) {
-                classes.put(method.name(), "Classifier being generated!");
-                continue;
+            for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
+
+                Path modelPath = Paths.get(System.getenv("MODELS_PATH"), this.getUserId().toString(), method.name() + ".bin");
+                if (!modelPath.toFile().exists()) {
+                    classes.put(method.name(), "Classifier being generated!");
+                    continue;
+                }
+
+                String className = classifier.classify(classInstances, modelPath.toString());
+
+                log.info("The method {} classified the instance as {} for userId {}", method.name(), className, userId.toString());
+                classes.put(method.name(), className);
             }
-
-            String className = classifier.classify(classInstances, modelPath.toString());
-
-            log.info("The method {} classified the instance as {} for userId {}", method.name(), className, userId.toString());
-            classes.put(method.name(), className);
+        } catch(Exception e) {
+            for (ModelGenerator.METHODS method : ModelGenerator.METHODS.values()) {
+                classes.put(method.name(), "Classifier being generated!");
+            }
         }
         return classes;
     }
