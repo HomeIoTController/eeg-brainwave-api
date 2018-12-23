@@ -13,7 +13,7 @@ This app enables storing and classifying `eeg` data coming from the [eeg-brainwa
   * Turn off the `eeg-brainwave-controller` service
     * `docker-compose stop eeg-brainwave-controller`
   * Run the following command:
-    * `sudo echo "127.0.0.1       kafka-server" >> /etc/hosts`
+    * `sudo echo "127.0.0.1       kafka-broker" >> /etc/hosts`
   * Open this project with IntelliJ
     * ![setup_options](./READMEImages/setup_options.png)
     * Select `Remote Application - Docker` and click `Run`

@@ -1,7 +1,7 @@
 package app.kafka;
 
 public interface IKafkaConstants {
-    String KAFKA_BROKERS = System.getenv("KAFKA_SERVER") + ":" + System.getenv("KAFKA_PORT");
+    String KAFKA_BROKERS = System.getenv("KAFKA_BROKER") + ":" + System.getenv("KAFKA_PORT");
     String CLIENT_ID="eeg-api";
     String TOPIC_NAME=System.getenv("KAFKA_TOPIC");
     String GROUP_ID_CONFIG="eeg";
